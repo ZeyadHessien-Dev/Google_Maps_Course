@@ -33,11 +33,19 @@ class _HomeState extends State<Home> {
               setState(
                 () {
                   markers.add(
-                    const Marker(
-                      markerId: MarkerId('1'),
-                      position: LatLng (
+                     Marker(
+                      markerId: const MarkerId('1'),
+                      position: const LatLng(
                         31.205753,
                         29.924526,
+                      ),
+                      infoWindow: InfoWindow(
+                        title: 'Learn Google Maps',
+                        snippet: 'Please Learn Code Well',
+                        onTap: () {
+                          /// May be go to another page, send thing to API
+                          print("Marker Tap");
+                        },
                       ),
                     ),
                   );
