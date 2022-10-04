@@ -84,6 +84,13 @@ class _HomeState extends State<Home> {
                       },
                       icon: customMarker!,
                     ),
+            
+                      ),
+                      onTap: () {
+                          /// May be go to another page, send thing to API
+                          print("Marker Tap");
+                        },
+                     ),
                   );
                 },
               );
