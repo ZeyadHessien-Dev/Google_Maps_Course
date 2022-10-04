@@ -26,6 +26,28 @@ class _HomeState extends State<Home> {
     super.initState();
   }
 
+
+  Set<Polygon> myPolygon() {
+    List<LatLng> polygonCoords = [
+      const LatLng(37.43296265331129, -122.08832357078792),
+      const LatLng(37.43006265331129, -122.08832357078792),
+      const LatLng(37.43006265331129, -122.08332357078792),
+      const LatLng(37.43296265331129, -122.08832357078792),
+    ];
+
+    Set<Polygon> polygonSet = <Polygon>{};
+    polygonSet.add(
+      Polygon( /// Indicate Google Map Package
+        polygonId: const PolygonId('1'),
+        points: polygonCoords,
+        strokeWidth: 5,
+        fillColor: Colors.white,
+        strokeColor: Colors.red,
+      ),
+    );
+    return polygonSet;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,8 +60,8 @@ class _HomeState extends State<Home> {
           GoogleMap(
             initialCameraPosition: const CameraPosition(
               target: LatLng(
-                31.205753,
-                29.924526,
+                37.43296265331129,
+                -122.08832357078792,
               ),
               zoom: 19,
             ),
@@ -68,6 +90,7 @@ class _HomeState extends State<Home> {
               );
             },
             markers: markers,
+            polygons: myPolygon(),
           ),
           Image.asset(
             'assets/images/c2s.png',
