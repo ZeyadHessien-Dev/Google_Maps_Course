@@ -26,7 +26,6 @@ class _HomeState extends State<Home> {
     super.initState();
   }
 
-  /// Collection Contain On Marker
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,13 +63,6 @@ class _HomeState extends State<Home> {
                       },
                       icon: customMarker!,
                     ),
-            
-                      ),
-                      onTap: () {
-                          /// May be go to another page, send thing to API
-                          print("Marker Tap");
-                        },
-                     ),
                   );
                 },
               );
