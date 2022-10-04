@@ -58,16 +58,21 @@ class _HomeState extends State<Home> {
         alignment: AlignmentDirectional.topCenter,
         children: [
           GoogleMap(
+            mapType: MapType.normal,
+            // mapType: MapType.hybrid,
+            // mapType: MapType.satellite,
+            // mapType: MapType.terrain,
+            //  mapType: MapType.none,
             initialCameraPosition: const CameraPosition(
               target: LatLng(
-                37.43296265331129,
-                -122.08832357078792,
+                31.205753,
+                29.924526,
               ),
-              zoom: 19,
+              zoom: 14,
             ),
             onMapCreated: (GoogleMapController controller) {
               setState(
-                () {
+                    () {
                   markers.add(
                     Marker(
                       markerId: const MarkerId('1'),
@@ -83,7 +88,7 @@ class _HomeState extends State<Home> {
                         /// May be go to another page, send thing to API
                         print("Marker Tap");
                       },
-                      icon: customMarker!,
+                      // icon: customMarker!,
                     ),
                   );
                 },
