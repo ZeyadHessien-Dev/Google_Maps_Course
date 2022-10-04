@@ -10,6 +10,21 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   var markers = HashSet<Marker>();
+  BitmapDescriptor? customMarker;
+
+  getCustomMarker() async {
+    customMarker = await BitmapDescriptor.fromAssetImage(
+      /// Configuration --> Additional Image
+      ImageConfiguration.empty,
+      "assets/images/cc2s.png",
+    );
+  }
+
+  @override
+  void initState() {
+    getCustomMarker();
+    super.initState();
+  }
 
   /// Collection Contain On Marker
   @override
@@ -33,15 +48,22 @@ class _HomeState extends State<Home> {
               setState(
                 () {
                   markers.add(
-                     Marker(
+                    Marker(
                       markerId: const MarkerId('1'),
                       position: const LatLng(
                         31.205753,
                         29.924526,
                       ),
-                      infoWindow: InfoWindow(
+                      infoWindow: const InfoWindow(
                         title: 'Learn Google Maps',
                         snippet: 'Please Learn Code Well',
+                      ),
+                      onTap: () {
+                        /// May be go to another page, send thing to API
+                        print("Marker Tap");
+                      },
+                      icon: customMarker!,
+                    ),
             
                       ),
                       onTap: () {
