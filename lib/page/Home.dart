@@ -42,12 +42,13 @@ class _HomeState extends State<Home> {
                       infoWindow: InfoWindow(
                         title: 'Learn Google Maps',
                         snippet: 'Please Learn Code Well',
-                        onTap: () {
+            
+                      ),
+                      onTap: () {
                           /// May be go to another page, send thing to API
                           print("Marker Tap");
                         },
-                      ),
-                    ),
+                     ),
                   );
                 },
               );
