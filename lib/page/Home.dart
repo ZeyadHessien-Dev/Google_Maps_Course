@@ -13,14 +13,22 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: const Text('First Google Map'),
       ),
-      body: const GoogleMap(
-        initialCameraPosition: CameraPosition(
-          target: LatLng(
-            31.205753,
-            29.924526,
+      body: Stack(
+        alignment: AlignmentDirectional.topCenter,
+        children: [
+          const GoogleMap(
+            initialCameraPosition: CameraPosition(
+              target: LatLng(
+                31.205753,
+                29.924526,
+              ),
+              zoom: 19,
+            ),
           ),
-          zoom: 19,
-        ),
+          Image.asset(
+            'assets/images/c2s.png',
+          ),
+        ],
       ),
     );
   }
