@@ -22,12 +22,34 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    getCustomMarker();
     super.initState();
+    getCustomMarker();
+    createPolyLine();
   }
 
+  createPolyLine() {
+    myPolyline.add(
+      Polyline(
+        polylineId: const PolylineId('1'),
+        color: Colors.blue,
+        width: 3,
+        patterns: [
+          PatternItem.dash(
+            20.0,
+          ),
+          PatternItem.gap(
+            10,
+          ),
+        ],
+        points: const [
+          LatLng(29.990000, 31.149000),
+          LatLng(29.999000, 31.149900),
+        ],
+      ),
+    );
+  }
 
-  /// Set Like Array
+  /// Set Like Array [Polygon]
   Set<Polygon> myPolygon = {
     const Polygon(
       polygonId: PolygonId('1'),
@@ -42,7 +64,8 @@ class _HomeState extends State<Home> {
       strokeColor: Colors.red,
     ),
   };
-  /// Set Like Array
+
+  /// [Circle]
   Set<Circle> myCircles = {
     const Circle(
       circleId: CircleId('1'),
@@ -52,6 +75,9 @@ class _HomeState extends State<Home> {
       fillColor: Colors.white,
     ),
   };
+
+  /// [Polyline]
+  List<Polyline> myPolyline = [];
 
   @override
   Widget build(BuildContext context) {
@@ -70,8 +96,8 @@ class _HomeState extends State<Home> {
             //  mapType: MapType.none,
             initialCameraPosition: const CameraPosition(
               target: LatLng(
-                37.43296265331129,
-                -122.08832357078792,
+                29.990000,
+                31.149000,
               ),
               zoom: 14,
             ),
@@ -102,6 +128,7 @@ class _HomeState extends State<Home> {
             markers: markers,
             polygons: myPolygon,
             circles: myCircles,
+            polylines: myPolyline.toSet(),
           ),
           Image.asset(
             'assets/images/c2s.png',
