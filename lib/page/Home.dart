@@ -26,6 +26,7 @@ class _HomeState extends State<Home> {
     super.initState();
   }
 
+
   Set<Polygon> myPolygon() {
     List<LatLng> polygonCoords = [
       const LatLng(37.43296265331129, -122.08832357078792),
@@ -84,13 +85,6 @@ class _HomeState extends State<Home> {
                       },
                       icon: customMarker!,
                     ),
-            
-                      ),
-                      onTap: () {
-                          /// May be go to another page, send thing to API
-                          print("Marker Tap");
-                        },
-                     ),
                   );
                 },
               );
