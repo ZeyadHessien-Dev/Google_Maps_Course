@@ -14,6 +14,7 @@ class _HomeState extends State<Home> {
   dynamic lat;
   dynamic long;
   Set<Marker>? markers;
+  StreamSubscription<Position>? positionStream;
 
   Future getPostion() async {
     bool services;
@@ -37,8 +38,7 @@ class _HomeState extends State<Home> {
   }
 
   void getLatAndLog() async {
-    currentLocation =
-        await Geolocator.getCurrentPosition().then((value) => value);
+    currentLocation = await Geolocator.getCurrentPosition().then((value) => value);
     lat = currentLocation!.latitude;
     long = currentLocation!.longitude;
     cameraPosition = CameraPosition(
@@ -52,22 +52,16 @@ class _HomeState extends State<Home> {
         infoWindow: InfoWindow(
           title: 'One',
           onTap: () {
-            print("One");
+            print("Tap Info Marker");
           },
         ),
         onTap: () {
-          print("Tap Info Marker");
+          print("Tap Marker");
         },
         draggable: true,
         onDragEnd: (LatLng t) {
           print("On Drag End $t");
         },
-
-        /// Can Do It With assetImage Like Following
-        //  BitmapDescriptor.fromAssetImage(
-        //       ImageConfiguration.empty,
-        //       "assets/images/cc2s.png",
-        //     );
         icon: BitmapDescriptor.defaultMarkerWithHue(
           BitmapDescriptor.hueCyan,
         ),
@@ -76,9 +70,27 @@ class _HomeState extends State<Home> {
     setState(() {});
   }
 
+  changeMarker(newLat, newLang) {
+    markers!.remove(
+      const Marker(
+        markerId: MarkerId('1'),
+      ),
+    );
+    markers!.add(
+      Marker(
+        markerId: const MarkerId('1'),
+        position: LatLng(newLat, newLang),
+      ),
+    );
+    setState(() {});
+  }
+
   @override
   initState() {
     getPostion();
+    positionStream = Geolocator.getPositionStream().listen((Position? position) {
+          changeMarker(position!.latitude, position.longitude);
+        });
     super.initState();
   }
 
@@ -97,20 +109,7 @@ class _HomeState extends State<Home> {
               : SizedBox(
                   height: 500,
                   child: GoogleMap(
-                    onTap: (LatLng latLng) {
-                      markers!.remove(
-                        const Marker(
-                          markerId: MarkerId('1'),
-                        ),
-                      );
-                      markers!.add(
-                        Marker(
-                          markerId: const MarkerId('1'),
-                          position: latLng,
-                        ),
-                      );
-                      setState(() {});
-                    },
+                    onTap: (LatLng latLng) {},
                     mapType: MapType.normal,
                     initialCameraPosition: cameraPosition!,
                     onMapCreated: (GoogleMapController controller) {
