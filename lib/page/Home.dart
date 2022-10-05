@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -9,13 +10,22 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  /// Vars
   Position? currentLocation;
   CameraPosition? cameraPosition;
   dynamic lat;
   dynamic long;
   Set<Marker>? markers;
-  StreamSubscription<Position>? positionStream;
 
+  /// Start PolyLine
+  Map<PolylineId, Polyline> polylines = {};
+  List<LatLng> polylineCoordinates = [];
+  PolylinePoints polylinePoints = PolylinePoints();
+  String googleAPiKey = "AIzaSyBIbLJ3GzdQZHMMndysG89b9EpQIzHlnMo";
+
+  /// End PolyLine
+
+  /// Methods
   Future getPostion() async {
     bool services;
     services = await Geolocator.isLocationServiceEnabled();
@@ -38,7 +48,8 @@ class _HomeState extends State<Home> {
   }
 
   void getLatAndLog() async {
-    currentLocation = await Geolocator.getCurrentPosition().then((value) => value);
+    currentLocation =
+        await Geolocator.getCurrentPosition().then((value) => value);
     lat = currentLocation!.latitude;
     long = currentLocation!.longitude;
     cameraPosition = CameraPosition(
@@ -63,34 +74,17 @@ class _HomeState extends State<Home> {
           print("On Drag End $t");
         },
         icon: BitmapDescriptor.defaultMarkerWithHue(
-          BitmapDescriptor.hueCyan,
+          BitmapDescriptor.hueOrange,
         ),
       ),
     };
-    setState(() {});
-  }
-
-  changeMarker(newLat, newLang) {
-    markers!.remove(
-      const Marker(
-        markerId: MarkerId('1'),
-      ),
-    );
-    markers!.add(
-      Marker(
-        markerId: const MarkerId('1'),
-        position: LatLng(newLat, newLang),
-      ),
-    );
+    getPolyline();
     setState(() {});
   }
 
   @override
   initState() {
     getPostion();
-    positionStream = Geolocator.getPositionStream().listen((Position? position) {
-          changeMarker(position!.latitude, position.longitude);
-        });
     super.initState();
   }
 
@@ -109,6 +103,13 @@ class _HomeState extends State<Home> {
               : SizedBox(
                   height: 500,
                   child: GoogleMap(
+                    myLocationEnabled: true,
+                    tiltGesturesEnabled: true,
+                    compassEnabled: true,
+                    scrollGesturesEnabled: true,
+                    zoomGesturesEnabled: true,
+                    /// I tell build Set with values [Polyline] of this map polylines
+                    polylines: Set<Polyline>.of(polylines.values),
                     onTap: (LatLng latLng) {},
                     mapType: MapType.normal,
                     initialCameraPosition: cameraPosition!,
@@ -180,5 +181,45 @@ class _HomeState extends State<Home> {
         ],
       ),
     );
+  }
+
+  getPolyline() async {
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      googleAPiKey,
+      PointLatLng(lat, long),
+      const PointLatLng(31.244469, 29.970851),
+      travelMode: TravelMode.driving,
+    );
+    /// Comments Because You need to paid this comments because of it, you can get a curly line not straight line
+    /// IF You Paid , Do IT
+    // if (result.points.isNotEmpty) {
+    //   result.points.forEach((PointLatLng point) {
+    /// Start
+    polylineCoordinates.add(LatLng(lat, long));
+    /// End
+    polylineCoordinates.add(const LatLng(31.244469, 29.970851));
+    //   });
+    // }
+    addPolyLine();
+  }
+
+  addPolyLine() {
+    PolylineId id = const PolylineId("poly");
+    Polyline polyline = Polyline(
+      polylineId: id,
+      color: Colors.green,
+      patterns: [
+        PatternItem.dash(
+          20.0,
+        ),
+        PatternItem.gap(
+          10,
+        ),
+      ],
+      points: polylineCoordinates,
+      width: 4,
+    );
+    polylines[id] = polyline;
+    setState(() {});
   }
 }
