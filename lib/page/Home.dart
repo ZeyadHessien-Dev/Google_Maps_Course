@@ -22,6 +22,7 @@ class _HomeState extends State<Home> {
     per = await Geolocator.checkPermission();
     if (per == LocationPermission.denied) {
       per = await Geolocator.requestPermission();
+
       /// IF User denied can navigate it to login screen for example by Navigator.Push
       // if (per == LocationPermission.whileInUse) {
       //   getLatAndLog();
@@ -35,7 +36,8 @@ class _HomeState extends State<Home> {
   }
 
   void getLatAndLog() async {
-    currentLocation = await Geolocator.getCurrentPosition().then((value) => value);
+    currentLocation =
+        await Geolocator.getCurrentPosition().then((value) => value);
     lat = currentLocation!.latitude;
     long = currentLocation!.longitude;
     cameraPosition = CameraPosition(
@@ -46,12 +48,12 @@ class _HomeState extends State<Home> {
   }
 
   @override
-   initState()  {
+  initState() {
     getPostion();
     super.initState();
   }
 
-  final Completer<GoogleMapController> _controller = Completer();
+  GoogleMapController? gmc;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +71,7 @@ class _HomeState extends State<Home> {
                     mapType: MapType.normal,
                     initialCameraPosition: cameraPosition!,
                     onMapCreated: (GoogleMapController controller) {
-                      _controller.complete(controller);
+                      gmc = controller;
                     },
                   ),
                 ),
@@ -78,9 +80,63 @@ class _HomeState extends State<Home> {
           ),
           MaterialButton(
             color: Colors.blue,
-            onPressed: () {},
+            onPressed: () {
+              LatLng latLng = const LatLng(
+                21.422390,
+                39.722958,
+              );
+
+              /// Can Use MoveCamera Instead AnimateCamera
+              gmc!.animateCamera(
+                // CameraUpdate.newLatLng(
+                //   latLng,
+                // ),
+                CameraUpdate.newCameraPosition(
+                  CameraPosition(
+                    target: latLng,
+                    zoom: 8,
+                  ),
+                ),
+              );
+            },
             child: const Text(
-              'Show Lat And Long',
+              'Go To Maka',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+          MaterialButton(
+            color: Colors.red,
+            onPressed: () async {
+              LatLng latLng = const LatLng(
+                21.422390,
+                39.722958,
+              );
+              var xy = await gmc!.getLatLng(
+                const ScreenCoordinate(x: 200, y: 200),
+              );
+              print('Current Coordinates On Map Is $xy');
+            },
+            child: const Text(
+              'Show LatLng',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+          MaterialButton(
+            color: Colors.amber,
+            onPressed: () async {
+              LatLng latLng = const LatLng(
+                21.422390,
+                39.722958,
+              );
+              var xy = await gmc!.getZoomLevel();
+              print('Current Zoom $xy');
+            },
+            child: const Text(
+              'Show LatLng',
               style: TextStyle(
                 color: Colors.white,
               ),
