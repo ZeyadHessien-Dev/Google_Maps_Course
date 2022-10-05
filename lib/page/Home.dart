@@ -13,7 +13,7 @@ class _HomeState extends State<Home> {
   CameraPosition? cameraPosition;
   dynamic lat;
   dynamic long;
-
+  Set<Marker>? markers;
   Future getPostion() async {
     bool services;
     services = await Geolocator.isLocationServiceEnabled();
@@ -44,6 +44,29 @@ class _HomeState extends State<Home> {
       target: LatLng(lat, long),
       zoom: 14.4746,
     );
+      markers = {
+      Marker(
+        markerId: const MarkerId('1'),
+        position: LatLng(lat,long),
+        infoWindow: InfoWindow(
+          title: 'One',
+          onTap: () {
+            print("One");
+          },
+        ),
+      ),
+      Marker(
+        markerId: const MarkerId('1'),
+        position: LatLng(lat + 1 ,long + 1),
+        infoWindow: InfoWindow(
+          title: 'Two',
+          onTap: () {
+            print("Two");
+          },
+        ),
+      ),
+
+    };
     setState(() {});
   }
 
@@ -55,6 +78,8 @@ class _HomeState extends State<Home> {
 
   GoogleMapController? gmc;
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,7 +88,7 @@ class _HomeState extends State<Home> {
       ),
       body: Column(
         children: [
-          cameraPosition == null
+          cameraPosition == null || markers == null
               ? const Center(child: CircularProgressIndicator())
               : SizedBox(
                   height: 500,
@@ -73,6 +98,7 @@ class _HomeState extends State<Home> {
                     onMapCreated: (GoogleMapController controller) {
                       gmc = controller;
                     },
+                    markers: markers!,
                   ),
                 ),
           const SizedBox(
