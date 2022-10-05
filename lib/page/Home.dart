@@ -62,6 +62,7 @@ class _HomeState extends State<Home> {
         onDragEnd: (LatLng t) {
           print("On Drag End $t");
         },
+
         /// Can Do It With assetImage Like Following
         //  BitmapDescriptor.fromAssetImage(
         //       ImageConfiguration.empty,
@@ -96,6 +97,20 @@ class _HomeState extends State<Home> {
               : SizedBox(
                   height: 500,
                   child: GoogleMap(
+                    onTap: (LatLng latLng) {
+                      markers!.remove(
+                        const Marker(
+                          markerId: MarkerId('1'),
+                        ),
+                      );
+                      markers!.add(
+                        Marker(
+                          markerId: const MarkerId('1'),
+                          position: latLng,
+                        ),
+                      );
+                      setState(() {});
+                    },
                     mapType: MapType.normal,
                     initialCameraPosition: cameraPosition!,
                     onMapCreated: (GoogleMapController controller) {
