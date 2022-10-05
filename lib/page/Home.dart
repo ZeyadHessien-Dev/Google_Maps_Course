@@ -14,6 +14,7 @@ class _HomeState extends State<Home> {
   dynamic lat;
   dynamic long;
   Set<Marker>? markers;
+
   Future getPostion() async {
     bool services;
     services = await Geolocator.isLocationServiceEnabled();
@@ -44,28 +45,32 @@ class _HomeState extends State<Home> {
       target: LatLng(lat, long),
       zoom: 14.4746,
     );
-      markers = {
+    markers = {
       Marker(
         markerId: const MarkerId('1'),
-        position: LatLng(lat,long),
+        position: LatLng(lat, long),
         infoWindow: InfoWindow(
           title: 'One',
           onTap: () {
             print("One");
           },
         ),
-      ),
-      Marker(
-        markerId: const MarkerId('1'),
-        position: LatLng(lat + 1 ,long + 1),
-        infoWindow: InfoWindow(
-          title: 'Two',
-          onTap: () {
-            print("Two");
-          },
+        onTap: () {
+          print("Tap Info Marker");
+        },
+        draggable: true,
+        onDragEnd: (LatLng t) {
+          print("On Drag End $t");
+        },
+        /// Can Do It With assetImage Like Following
+        //  BitmapDescriptor.fromAssetImage(
+        //       ImageConfiguration.empty,
+        //       "assets/images/cc2s.png",
+        //     );
+        icon: BitmapDescriptor.defaultMarkerWithHue(
+          BitmapDescriptor.hueCyan,
         ),
       ),
-
     };
     setState(() {});
   }
@@ -77,8 +82,6 @@ class _HomeState extends State<Home> {
   }
 
   GoogleMapController? gmc;
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -135,10 +138,6 @@ class _HomeState extends State<Home> {
           MaterialButton(
             color: Colors.red,
             onPressed: () async {
-              LatLng latLng = const LatLng(
-                21.422390,
-                39.722958,
-              );
               var xy = await gmc!.getLatLng(
                 const ScreenCoordinate(x: 200, y: 200),
               );
@@ -154,10 +153,6 @@ class _HomeState extends State<Home> {
           MaterialButton(
             color: Colors.amber,
             onPressed: () async {
-              LatLng latLng = const LatLng(
-                21.422390,
-                39.722958,
-              );
               var xy = await gmc!.getZoomLevel();
               print('Current Zoom $xy');
             },
